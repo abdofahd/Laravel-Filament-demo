@@ -1,0 +1,31 @@
+# Nixpacks build configuration
+#
+# Laravel 13 + Filament 5, served by the PHP provider's Nginx + PHP-FPM setup.
+# This application needs no frontend build: the only browser-facing UI is the
+# Filament panel, which ships its own precompiled assets under public/, and the
+# root route simply redirects to /admin.
+
+# Restrict Nixpacks to the PHP provider only.
+#
+# package.json is still committed (it carries the local `vite dev` tooling), so
+# without this line Nixpacks would auto-detect Node, run an npm install and then
+# `npm run build`. That build is unnecessary in production and would only add
+# failure modes. Naming the provider explicitly disables that detection.
+providers = ['php']
+
+[phases.install]
+# Overrides the provider's default install phase, which would otherwise run
+# `composer install --ignore-platform-reqs` *including* dev dependencies.
+#
+# The mkdir is carried over from that default: setting `cmds` replaces the phase
+# wholesale, and Nginx will not start without these directories.
+cmds = [
+  'mkdir -p /var/log/nginx /var/cache/nginx',
+  'composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist',
+]
+
+[variables]
+# Laravel's front controller is public/index.php, not the repository root.
+# The provider already infers this from the presence of `artisan`; stating it
+# makes the document root explicit and independent of that detection.
+NIXPACKS_PHP_ROOT_DIR = '/app/public'
