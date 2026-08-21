@@ -58,6 +58,10 @@ class MailTest extends Command
         } catch (Throwable $e) {
             $this->components->error(class_basename($e).': '.$e->getMessage());
 
+            if (str_contains($e->getMessage(), 'authenticate')) {
+                $this->diagnoseCredentials();
+            }
+
             return self::FAILURE;
         }
 
@@ -68,5 +72,47 @@ class MailTest extends Command
         );
 
         return self::SUCCESS;
+    }
+
+    /**
+     * Explain a 535 without ever printing the secret itself.
+     */
+    private function diagnoseCredentials(): void
+    {
+        $user = (string) config('mail.mailers.smtp.username');
+        $pass = (string) config('mail.mailers.smtp.password');
+
+        $this->newLine();
+        $this->components->twoColumnDetail('<fg=yellow;options=bold>Credential check</>', '');
+
+        $this->components->twoColumnDetail('Username length', (string) strlen($user));
+        $this->components->twoColumnDetail(
+            'Username has stray whitespace',
+            $user !== trim($user) ? '<fg=red>YES — breaks auth</>' : 'no'
+        );
+
+        $this->components->twoColumnDetail('Password length', (string) strlen($pass));
+        $this->components->twoColumnDetail(
+            'Password has whitespace',
+            preg_match('/\s/', $pass) === 1 ? '<fg=red>YES — value likely unquoted in .env</>' : 'no'
+        );
+        $this->components->twoColumnDetail(
+            'Password has # or quote chars',
+            preg_match('/[#"\']/', $pass) === 1 ? '<fg=red>YES — must be quoted in .env</>' : 'no'
+        );
+        $this->components->twoColumnDetail(
+            'Config cached',
+            app()->configurationIsCached()
+                ? '<fg=yellow>YES — run config:clear after changing env</>'
+                : 'no'
+        );
+        $this->components->twoColumnDetail('SMTP host', config('mail.mailers.smtp.host'));
+
+        $this->newLine();
+        $this->line('  A 535 with a non-empty password almost always means one of:');
+        $this->line('   <fg=cyan>1.</> The credential belongs to the <options=bold>other</> Mailgun region (US vs EU).');
+        $this->line('   <fg=cyan>2.</> The password was regenerated — Mailgun shows it only once.');
+        $this->line('   <fg=cyan>3.</> The username is not the exact SMTP login shown in Mailgun.');
+        $this->line('   <fg=cyan>4.</> Characters were lost to .env parsing — wrap the value in quotes.');
     }
 }
