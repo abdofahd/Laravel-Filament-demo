@@ -28,6 +28,13 @@ return [
             'products.delete' => 'Delete products',
         ],
 
+        'Attachments' => [
+            'attachments.view' => 'View uploaded files',
+            'attachments.create' => 'Upload files',
+            'attachments.update' => 'Edit uploaded files',
+            'attachments.delete' => 'Delete uploaded files',
+        ],
+
         'Roles' => [
             'roles.view' => 'View roles',
             'roles.manage' => 'Create, edit and delete roles',
