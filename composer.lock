@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7993647a5dc7dbe3faaef7e172449c08",
+    "content-hash": "00cdd634a41d597ec71cd3375380b0fc",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -5452,6 +5452,64 @@
                 }
             ],
             "time": "2026-04-27T14:27:52+00:00"
+        },
+        {
+            "name": "spykapps/theme-inverness",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SpykApp/theme-inverness.git",
+                "reference": "da9340cee813b029f0c549d9fff054f3154fc21f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SpykApp/theme-inverness/zipball/da9340cee813b029f0c549d9fff054f3154fc21f",
+                "reference": "da9340cee813b029f0c549d9fff054f3154fc21f",
+                "shasum": ""
+            },
+            "require": {
+                "filament/filament": "^4.0|^5.0",
+                "php": "^8.1",
+                "spatie/laravel-package-tools": "^1.16"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "SpyApp\\ThemeInverness\\ThemeInvernessServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "SpyApp\\ThemeInverness\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "SpyKapps",
+                    "email": "hello@spykapps.com"
+                }
+            ],
+            "description": "A premium Filament theme with refined aesthetics, tight spacing, and Laravel-red accents.",
+            "homepage": "https://spykapps.com/theme-inverness",
+            "keywords": [
+                "filament",
+                "filament-plugin",
+                "inverness",
+                "laravel",
+                "spykapps",
+                "theme"
+            ],
+            "support": {
+                "issues": "https://github.com/SpykApp/theme-inverness/issues",
+                "source": "https://github.com/SpykApp/theme-inverness/tree/v1.0.0"
+            },
+            "time": "2026-02-26T12:42:03+00:00"
         },
         {
             "name": "symfony/clock",
