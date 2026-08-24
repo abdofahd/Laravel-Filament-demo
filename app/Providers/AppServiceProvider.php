@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Policies\RolePolicy;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,5 +31,9 @@ class AppServiceProvider extends ServiceProvider
         if (str_starts_with((string) config('app.url'), 'https://')) {
             URL::forceScheme('https');
         }
+
+        // Spatie's Role lives outside App\Models, so Laravel's policy
+        // auto-discovery does not find RolePolicy on its own.
+        Gate::policy(Role::class, RolePolicy::class);
     }
 }

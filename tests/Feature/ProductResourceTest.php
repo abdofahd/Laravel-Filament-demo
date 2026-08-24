@@ -11,6 +11,7 @@ use App\Models\User;
 use Filament\Actions\DeleteAction;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Livewire\Livewire;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class ProductResourceTest extends TestCase
@@ -21,7 +22,16 @@ class ProductResourceTest extends TestCase
     {
         parent::setUp();
 
-        $this->actingAs(User::factory()->create());
+        // Products are now guarded by ProductPolicy, so the acting user needs
+        // the product permissions. Authorization itself is covered by
+        // AuthorizationTest; these tests cover CRUD behaviour.
+        $this->artisan('permissions:sync');
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $user = User::factory()->create();
+        $user->assignRole('admin');
+
+        $this->actingAs($user->fresh());
     }
 
     private function makeProduct(array $attributes = []): Product
